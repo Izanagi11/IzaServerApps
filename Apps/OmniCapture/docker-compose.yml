@@ -22,4 +22,4 @@ x-casaos:
   port_map: "8181"
   author: Iza
   # Add any direct image link here so it looks good in the store!
-  icon: https://github.com/Izanagi11/IzaServerApps/blob/main/Apps/OmniCapture/video-camera.png
+  icon: https://raw.githubusercontent.com/Izanagi11/IzaServerAppstore/refs/heads/main/Apps/OmniCapture/video-camera.png
