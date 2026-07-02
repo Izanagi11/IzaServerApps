@@ -1,0 +1,32 @@
+services:
+  omni-login:
+    image: lscr.io/linuxserver/chromium:latest
+    container_name: omni-login
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Denver
+      - CHROME_CLI=https://google.com
+    ports:
+      - "3333:3001" 
+    volumes:
+      # CRITICAL: This explicitly points into the other app's folder!
+      - /media/ZimaOS-HD/AppData/omnicapture/server/data/shared_profile:/config
+    shm_size: "1gb"
+    security_opt:
+      - seccomp=unconfined
+    restart: unless-stopped
+
+# ZimaOS App Store UI Metadata
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  main_app: omnilogin
+  title:
+    custom: OmniLogin
+  description:
+    en_us: Chromium Login For OmniCapture
+  category: Utilities
+  port_map: "3333"
+  author: Iza
