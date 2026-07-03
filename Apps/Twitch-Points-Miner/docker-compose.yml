@@ -1,0 +1,58 @@
+name: twitch-points-miner
+services:
+  miner:
+    image: rdavidoff/twitch-channel-points-miner-v2:2.0.5
+    container_name: twitch-points-miner
+    restart: unless-stopped
+    ports:
+      - target: 5000
+        published: "5000"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /DATA/AppData/$AppID/run.py
+        target: /usr/src/app/run.py
+      - type: bind
+        source: /DATA/AppData/$AppID/analytics
+        target: /usr/src/app/analytics
+      - type: bind
+        source: /DATA/AppData/$AppID/cookies
+        target: /usr/src/app/cookies
+      - type: bind
+        source: /DATA/AppData/$AppID/logs
+        target: /usr/src/app/logs
+    x-casaos:
+      envs: []
+      ports:
+        - container: "5000"
+          description:
+            en_US: WebUI Port
+      volumes:
+        - container: /usr/src/app/run.py
+          description:
+            en_US: Configuration script (run.py)
+        - container: /usr/src/app/analytics
+          description:
+            en_US: Analytics data
+        - container: /usr/src/app/cookies
+          description:
+            en_US: Login cookies
+        - container: /usr/src/app/logs
+          description:
+            en_US: Logs folder
+
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+    - arm
+  main: miner
+  author: rdavydov
+  category: Utilities
+  title:
+    en_US: Twitch Channel Points Miner
+  tagline:
+    en_US: Automate Twitch channel points farming
+  description:
+    en_US: A simple script that will watch a stream for you and earn the channel points. It can wait for a streamer to go live, it will automatically click the bonus button, and it will follow raids.\n\n⚠️ IMPORTANT: You MUST manually download the example.py script from the developer's GitHub, rename it to run.py, and place it inside /DATA/AppData/twitch-points-miner/ before installing this app. If you do not, Docker will create a folder named run.py and the app will crash.
+  icon: https://cdn-icons-png.flaticon.com/512/5968/5968817.png
