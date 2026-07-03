@@ -8,5 +8,15 @@
     "name": "Utilities",
     "font": "casa-utilities",
     "description": "System Utilities and Tools"
+  },
+  {
+    "name": "Automation",
+    "font": "casa-app",
+    "description": "Automated Python Scripts and Bots"
+  },
+  {
+    "name": "Gaming",
+    "font": "casa-game",
+    "description": "Gaming Utilities and Tools"
   }
 ]
