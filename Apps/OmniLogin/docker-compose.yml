@@ -10,7 +10,10 @@ services:
     ports:
       - "3333:3001" 
     volumes:
+      # Your existing cookie profile mapping
       - /media/ZimaOS-HD/AppData/omnicapture/server/data/shared_profile:/config
+      # ADD THIS NEW LINE: Map your storage drive to the container's download folder
+      - /media/WD7200_2/stash/_Unsorted_Junk:/downloads
     shm_size: "1gb"
     security_opt:
       - seccomp=unconfined
