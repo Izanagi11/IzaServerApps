@@ -1,9 +1,34 @@
 name: qbittorrent-gluetun
 services:
+  # The new automated setup script
+  qbit-setup:
+    image: alpine:latest
+    container_name: qbit-setup
+    restart: "no"
+    volumes:
+      - type: bind
+        source: /DATA/AppData/$AppID/config
+        target: /config
+    command:
+      - sh
+      - -c
+      - |
+        mkdir -p /config/qBittorrent
+        touch /config/qBittorrent/qBittorrent.conf
+        if ! grep -q 'HostHeaderValidation=false' /config/qBittorrent/qBittorrent.conf; then
+          echo '[Preferences]' >> /config/qBittorrent/qBittorrent.conf
+          echo 'WebUI\HostHeaderValidation=false' >> /config/qBittorrent/qBittorrent.conf
+          echo 'WebUI\CSRFProtection=false' >> /config/qBittorrent/qBittorrent.conf
+        fi
+
+  # Your main qBittorrent client
   qbittorrent:
     image: ghcr.io/hotio/qbittorrent:latest
     container_name: qbittorrent
     restart: unless-stopped
+    depends_on:
+      qbit-setup:
+        condition: service_completed_successfully
     environment:
       - PGID=1000
       - PUID=1000
