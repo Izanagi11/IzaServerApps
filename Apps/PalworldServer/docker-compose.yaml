@@ -67,4 +67,4 @@ x-casaos:
     en_US: Feature-rich dedicated server wrapper
   description:
     en_US: "The community-favorite Palworld dedicated server wrapper. Unlike the raw official image, this container automatically updates the game on boot, runs hourly automatic backups, and allows you to completely configure the server directly from the ZimaOS Settings menu without touching a single .ini file."
-  icon: https://raw.githubusercontent.com/Izanagi11/IzaServerAppstore/refs/heads/main/Apps/Palworld/palworld.png
+  icon: https://raw.githubusercontent.com/Izanagi11/IzaServerAppstore/refs/heads/main/Apps/PalworldServer/logo.jpg
