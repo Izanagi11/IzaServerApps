@@ -29,6 +29,9 @@ services:
       - type: bind
         source: /DATA/AppData/$AppID/data
         target: /palworld
+      - type: bind
+        source: /media/Hitachi5600/PalworldBackups
+        target: /palworld/backups
     x-casaos:
       envs:
         - container: SERVER_NAME
@@ -53,7 +56,10 @@ services:
       volumes:
         - container: /palworld
           description:
-            en_US: Game saves, backups, and server data
+            en_US: Active game saves and core server files (SSD)
+        - container: /palworld/backups
+          description:
+            en_US: Compressed automatic backups (HDD)
 
 x-casaos:
   architectures:
