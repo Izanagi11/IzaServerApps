@@ -1,0 +1,46 @@
+name: palworld-server-tool
+services:
+  pst:
+    image: zaigie/palworld-server-tool:latest
+    container_name: palworld-server-tool
+    restart: unless-stopped
+    environment:
+      - TZ=America/Denver
+    ports:
+      - target: 8080
+        published: "8213"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /DATA/AppData/$AppID/data
+        target: /app/data
+    x-casaos:
+      envs:
+        - container: TZ
+          description:
+            en_US: Timezone configuration
+      ports:
+        - container: "8080"
+          description:
+            en_US: WebUI Port
+      volumes:
+        - container: /app/data
+          description:
+            en_US: Database and persistent settings
+
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  main: pst
+  author: zaigie
+  category: Gaming
+  title:
+    en_US: Palworld Server Tool
+  tagline:
+    en_US: Web Dashboard for Palworld
+  description:
+    en_US: A graphical web interface to manage your Palworld dedicated server. Easily view connected players, broadcast messages, and issue commands using the Palworld REST API.
+  icon: https://raw.githubusercontent.com/Izanagi11/IzaServerAppstore/refs/heads/main/Apps/Palworld/palworld.png
+  port_map: "8213"
+  index: /
