@@ -4,34 +4,45 @@ services:
     image: thijsvanloef/palworld-server-docker:latest
     container_name: palworld-server
     restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Denver
-      - SERVER_NAME=Zens Palworld Server
-      - SERVER_PASSWORD=
-      - ADMIN_PASSWORD=ChangeMeNow
-      - PLAYERS=8
-      - MULTITHREADING=true
-      - RCON_ENABLED=true
-      - RCON_PORT=25575
-      - UPDATE_ON_BOOT=true
-      - BACKUP_ENABLED=true
-      - BACKUP_CRON_EXPRESSION=0 * * * *
+    stop_grace_period: 30s
     ports:
       - target: 8211
         published: "8211"
         protocol: udp
-      - target: 25575
-        published: "25575"
+      - target: 27015
+        published: "27015"
+        protocol: udp
+      - target: 8212
+        published: "8212"
         protocol: tcp
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - PORT=8211
+      - PLAYERS=20
+      - SERVER_PASSWORD=Zen Division
+      - MULTITHREADING=true
+      - REST_API_ENABLED=true
+      - REST_API_PORT=8212
+      - TZ=America/Denver
+      - ADMIN_PASSWORD=MikasaIzanami#11
+      - COMMUNITY=true
+      - SERVER_NAME=Zen's Palworld Server
+      - SERVER_DESCRIPTION=Palworld Server hosted by Iza
+      - CROSSPLAY_PLATFORMS=(Steam,Xbox,PS5,Mac)
+      - BACKUP_ENABLED=true
+      - BACKUP_CRON_EXPRESSION=0 * * * *
+      - UPDATE_ON_BOOT=true
+      - DELETE_OLD_BACKUPS=true
+      - OLD_BACKUP_DAYS=14
+      - AUTO_UPDATE_ENABLED=true
     volumes:
       - type: bind
-        source: /DATA/AppData/$AppID/data
-        target: /palworld
+        source: /DATA/AppData/$AppID/palworld
+        target: /palworld/
       - type: bind
         source: /media/Hitachi5600/PalworldBackups
-        target: /palworld/backups
+        target: /palworld/backups/
     x-casaos:
       envs:
         - container: SERVER_NAME
@@ -50,14 +61,17 @@ services:
         - container: "8211"
           description:
             en_US: Palworld Game Port (UDP)
-        - container: "25575"
+        - container: "27015"
           description:
-            en_US: RCON Management Port (TCP)
+            en_US: Community Server Port (UDP)
+        - container: "8212"
+          description:
+            en_US: REST API Port (TCP) - DO NOT PORT FORWARD
       volumes:
-        - container: /palworld
+        - container: /palworld/
           description:
-            en_US: Active game saves and core server files (SSD)
-        - container: /palworld/backups
+            en_US: Game saves and server data (SSD)
+        - container: /palworld/backups/
           description:
             en_US: Compressed automatic backups (HDD)
 
@@ -68,9 +82,9 @@ x-casaos:
   author: thijsvanloef
   category: Gaming
   title:
-    en_US: Palworld Server (Advanced)
+    en_US: Palworld Server
   tagline:
     en_US: Feature-rich dedicated server wrapper
   description:
-    en_US: "The community-favorite Palworld dedicated server wrapper. Unlike the raw official image, this container automatically updates the game on boot, runs hourly automatic backups, and allows you to completely configure the server directly from the ZimaOS Settings menu without touching a single .ini file."
+    en_US: "The community-favorite Palworld dedicated server wrapper. Automatically updates the game on boot and allows you to configure the server directly from the ZimaOS Settings menu."
   icon: https://raw.githubusercontent.com/Izanagi11/IzaServerAppstore/refs/heads/main/Apps/PalworldServer/logo.jpg
