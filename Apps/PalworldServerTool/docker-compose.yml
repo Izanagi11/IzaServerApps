@@ -1,9 +1,29 @@
 name: palworld-server-tool
 services:
+  # The automated setup script to safely create the database files
+  pst-setup:
+    image: alpine:latest
+    container_name: pst-setup
+    restart: "no"
+    volumes:
+      - type: bind
+        source: /DATA/AppData/$AppID/config
+        target: /config
+    command:
+      - sh
+      - -c
+      - |
+        touch /config/pst.db
+        touch /config/config.db
+
+  # The actual Palworld Server Tool
   pst:
-    image: zaigie/palworld-server-tool:latest
+    image: jokerwho/palworld-server-tool:latest
     container_name: palworld-server-tool
     restart: unless-stopped
+    depends_on:
+      pst-setup:
+        condition: service_completed_successfully
     environment:
       - TZ=America/Denver
     ports:
@@ -12,8 +32,15 @@ services:
         protocol: tcp
     volumes:
       - type: bind
-        source: /DATA/AppData/$AppID/data
-        target: /app/data
+        source: /DATA/AppData/$AppID/config/pst.db
+        target: /app/pst.db
+      - type: bind
+        source: /DATA/AppData/$AppID/config/config.db
+        target: /app/config.db
+      # This links PST directly to your game server's save folder
+      - type: bind
+        source: /DATA/AppData/palworld-server/palworld/Pal/Saved
+        target: /game
     x-casaos:
       envs:
         - container: TZ
@@ -24,9 +51,15 @@ services:
           description:
             en_US: WebUI Port
       volumes:
-        - container: /app/data
+        - container: /app/pst.db
           description:
-            en_US: Database and persistent settings
+            en_US: Application Database
+        - container: /app/config.db
+          description:
+            en_US: Configuration Database
+        - container: /game
+          description:
+            en_US: Read-access to Palworld save files
 
 x-casaos:
   architectures:
@@ -40,7 +73,7 @@ x-casaos:
   tagline:
     en_US: Web Dashboard for Palworld
   description:
-    en_US: A graphical web interface to manage your Palworld dedicated server. Easily view connected players, broadcast messages, and issue commands using the Palworld REST API.
+    en_US: A graphical web interface to manage your Palworld dedicated server. Easily view connected players, broadcast messages, and issue commands using the Palworld REST API and direct .sav file parsing.
   icon: https://raw.githubusercontent.com/Izanagi11/IzaServerAppstore/refs/heads/main/Apps/Palworld/palworld.png
   port_map: "8213"
   index: /
