@@ -72,16 +72,11 @@ x-casaos:
   author: thijsvanloef
   category: Gaming
   description:
-    en_US: The community-favorite Palworld dedicated server wrapper. Automatically
-      updates the game on boot and allows you to configure the server directly
-      from the ZimaOS Settings menu.
+    en_US: "The community-favorite Palworld dedicated server wrapper. Automatically updates the game on boot and allows you to configure the server directly from the ZimaOS Settings menu."
   hostname: ""
   icon: https://raw.githubusercontent.com/Izanagi11/IzaServerAppstore/refs/heads/main/Apps/PalworldServer/logo.jpg
-  index: /
   is_uncontrolled: false
   main: palworld
-  port_map: "8211"
-  scheme: http
   store_app_id: palworld-server
   tagline:
     en_US: Feature-rich dedicated server wrapper
