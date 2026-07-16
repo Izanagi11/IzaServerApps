@@ -1,10 +1,41 @@
 name: palworld-server
 services:
   palworld:
-    image: thijsvanloef/palworld-server-docker:latest
+    cpu_shares: 90
+    command: []
     container_name: palworld-server
-    restart: unless-stopped
-    stop_grace_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 50443988992
+        reservations:
+          devices: []
+    environment:
+      - ADMIN_PASSWORD=changeme
+      - AUTO_UPDATE_ENABLED=true
+      - BACKUP_CRON_EXPRESSION=0 * * * *
+      - BACKUP_ENABLED=true
+      - COMMUNITY=true
+      - CROSSPLAY_PLATFORMS=(Steam,Xbox,PS5,Mac)
+      - DELETE_OLD_BACKUPS=true
+      - ENABLE_PERF_THREADING_ARGS=true
+      - OLD_BACKUP_DAYS=14
+      - PGID=1000
+      - PLAYERS=20
+      - PORT=8211
+      - PUID=1000
+      - REST_API_ENABLED=true
+      - REST_API_PORT=8212
+      - RCON_ENABLED=true
+      - RCON_PORT=27575
+      - SERVER_DESCRIPTION=Palworld Server hosted by Iza
+      - SERVER_NAME=Zen's Palworld Server
+      - SERVER_PASSWORD=Zen Division
+      - TZ=America/Denver
+      - UPDATE_ON_BOOT=true
+    image: thijsvanloef/palworld-server-docker:latest
+    labels:
+      icon: https://raw.githubusercontent.com/Izanagi11/IzaServerAppstore/refs/heads/main/Apps/PalworldServer/logo.jpg
     ports:
       - target: 8211
         published: "8211"
@@ -15,76 +46,45 @@ services:
       - target: 8212
         published: "8212"
         protocol: tcp
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - PORT=8211
-      - PLAYERS=20
-      - SERVER_PASSWORD=Zen Division
-      - MULTITHREADING=true
-      - REST_API_ENABLED=true
-      - REST_API_PORT=8212
-      - TZ=America/Denver
-      - ADMIN_PASSWORD=MikasaIzanami#11
-      - COMMUNITY=true
-      - SERVER_NAME=Zen's Palworld Server
-      - SERVER_DESCRIPTION=Palworld Server hosted by Iza
-      - CROSSPLAY_PLATFORMS=(Steam,Xbox,PS5,Mac)
-      - BACKUP_ENABLED=true
-      - BACKUP_CRON_EXPRESSION=0 * * * *
-      - UPDATE_ON_BOOT=true
-      - DELETE_OLD_BACKUPS=true
-      - OLD_BACKUP_DAYS=14
-      - AUTO_UPDATE_ENABLED=true
+      - target: 27575
+        published: "27575"
+        protocol: tcp
+    restart: unless-stopped
+    stop_grace_period: 30s
     volumes:
       - type: bind
-        source: /DATA/AppData/$AppID/palworld
+        source: /DATA/AppData/palworld-server/palworld
         target: /palworld/
       - type: bind
         source: /media/Hitachi5600/PalworldBackups
         target: /palworld/backups/
-    x-casaos:
-      envs:
-        - container: SERVER_NAME
-          description:
-            en_US: The name of your server in the server browser
-        - container: SERVER_PASSWORD
-          description:
-            en_US: Game password (leave blank for no password)
-        - container: ADMIN_PASSWORD
-          description:
-            en_US: Admin/RCON password for in-game commands
-        - container: PLAYERS
-          description:
-            en_US: Maximum number of concurrent players
-      ports:
-        - container: "8211"
-          description:
-            en_US: Palworld Game Port (UDP)
-        - container: "27015"
-          description:
-            en_US: Community Server Port (UDP)
-        - container: "8212"
-          description:
-            en_US: REST API Port (TCP) - DO NOT PORT FORWARD
-      volumes:
-        - container: /palworld/
-          description:
-            en_US: Game saves and server data (SSD)
-        - container: /palworld/backups/
-          description:
-            en_US: Compressed automatic backups (HDD)
-
+    devices: []
+    cap_add: []
+    networks:
+      - default
+    privileged: false
+networks:
+  default:
+    name: palworld-server_default
 x-casaos:
   architectures:
     - amd64
-  main: palworld
   author: thijsvanloef
   category: Gaming
-  title:
-    en_US: Palworld Server
+  description:
+    en_US: The community-favorite Palworld dedicated server wrapper. Automatically
+      updates the game on boot and allows you to configure the server directly
+      from the ZimaOS Settings menu.
+  hostname: ""
+  icon: https://raw.githubusercontent.com/Izanagi11/IzaServerAppstore/refs/heads/main/Apps/PalworldServer/logo.jpg
+  index: /
+  is_uncontrolled: false
+  main: palworld
+  port_map: "8211"
+  scheme: http
+  store_app_id: palworld-server
   tagline:
     en_US: Feature-rich dedicated server wrapper
-  description:
-    en_US: "The community-favorite Palworld dedicated server wrapper. Automatically updates the game on boot and allows you to configure the server directly from the ZimaOS Settings menu."
-  icon: https://raw.githubusercontent.com/Izanagi11/IzaServerAppstore/refs/heads/main/Apps/PalworldServer/logo.jpg
+  title:
+    custom: ""
+    en_US: Palworld Server
