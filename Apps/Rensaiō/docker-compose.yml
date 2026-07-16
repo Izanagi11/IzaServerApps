@@ -1,0 +1,47 @@
+name: rensaio
+services:
+  rensaio:
+    image: maxpiva/rensaio:latest
+    container_name: rensaio
+    environment:
+      - UID=1000
+      - PGID=1000
+      - UMASK=022
+    ports:
+      - target: 9833
+        published: "9833"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /DATA/AppData/rensaio/config
+        target: /config
+      - type: bind
+        source: /DATA/AppData/rensaio/manga
+        target: /manga
+      - type: bind
+        source: /DATA/AppData/rensaio/webtoons
+        target: /webtoons
+    restart: unless-stopped
+    networks:
+      - default
+
+networks:
+  default:
+    name: rensaio_default
+
+x-casaos:
+  architectures:
+    - amd64
+  author: maxpiva
+  category: Media
+  description:
+    en_US: "Rensaiō is a series manager that prioritizes simplicity, speed, and reliability. It uses the power of Mihon extensions to connect with multiple sources and automatically downloads and organizes your manga and webtoons."
+  icon: https://raw.githubusercontent.com/maxpiva/Kaizoku.NET/main/rensaio.png
+  main: rensaio
+  port_map: "9833"
+  scheme: http
+  store_app_id: rensaio
+  tagline:
+    en_US: Automated manga downloader powered by Mihon
+  title:
+    en_US: Rensaiō
